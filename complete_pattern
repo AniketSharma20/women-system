@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Pattern Lock Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        .status-ok { color: #28a745; }
+        .status-error { color: #dc3545; }
+        .status-warning { color: #ffc107; }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover { background: #0056b3; }
+        .pattern-container {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 10px 0;
+            text-align: center;
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Complete Pattern Lock Diagnostic Test</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Dependency Check</h2>
+        <button class="test-button" onclick="checkDependencies()">Check Dependencies</button>
+        <div id="dependencyStatus" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: HTML Structure Check</h2>
+        <button class="test-button" onclick="checkHTMLStructure()">Check HTML Structure</button>
+        <div id="htmlStatus" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Pattern Lock Test</h2>
+        <button class="test-button" onclick="testPatternLock()">Test Pattern Lock</button>
+        <div class="pattern-container" id="patternTestContainer">
+            Pattern lock will appear here when initialized
+        </div>
+        <div id="patternStatus" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 4: Script Loading Test</h2>
+        <button class="test-button" onclick="testScriptLoading()">Test Script Loading</button>
+        <div id="scriptStatus" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 5: Console Output</h2>
+        <div id="consoleLog" class="log"></div>
+        <button class="test-button" onclick="clearConsoleLog()">Clear Console</button>
+    </div>
+
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Include Pattern Lock CSS -->
+    <link rel="stylesheet" href="static/pattern-lock-simple.css">
+    
+    <!-- Include Pattern Lock JS -->
+    <script src="static/pattern-lock-simple.js"></script>
+
+    <script>
+        let consoleBuffer = '';
+        
+        // Override console.log to capture all output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function updateConsoleLog() {
+            document.getElementById('consoleLog').textContent = consoleBuffer;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleBuffer += '[LOG] ' + args.join(' ') + '\n';
+            updateConsoleLog();
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleBuffer += '[ERROR] ' + args.join(' ') + '\n';
+            updateConsoleLog();
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            consoleBuffer += '[WARN] ' + args.join(' ') + '\n';
+            updateConsoleLog();
+        };
+        
+        function clearConsoleLog() {
+            consoleBuffer = '';
+            updateConsoleLog();
+        }
+
+        function checkDependencies() {
+            const status = document.getElementById('dependencyStatus');
+            let output = 'Checking dependencies...\n\n';
+            
+            // Check if SimplePatternLock class exists
+            if (typeof SimplePatternLock !== 'undefined') {
+                output += '<span class="status-ok">✓ SimplePatternLock class found</span>\n';
+            } else {
+                output += '<span class="status-error">✗ SimplePatternLock class NOT found</span>\n';
+            }
+            
+            // Check if FontAwesome loaded
+            const faElements = document.querySelectorAll('[class*="fa-"]');
+            if (faElements.length > 0) {
+                output += '<span class="status-ok">✓ FontAwesome icons available</span>\n';
+            } else {
+                output += '<span class="status-warning">⚠ FontAwesome icons not detected</span>\n';
+            }
+            
+            // Check CSS
+            const cssLinks = document.querySelectorAll('link[href*="pattern-lock"]');
+            output += `✓ Found ${cssLinks.length} pattern lock CSS files\n`;
+            
+            status.innerHTML = output;
+        }
+
+        function checkHTMLStructure() {
+            const status = document.getElementById('htmlStatus');
+            let output = 'Checking HTML structure...\n\n';
+            
+            // Check for pattern lock containers
+            const containers = [
+                { id: 'loginPatternLock', name: 'Login Pattern Lock' },
+                { id: 'registerPatternLock', name: 'Register Pattern Lock' }
+            ];
+            
+            containers.forEach(container => {
+                const element = document.getElementById(container.id);
+                if (element) {
+                    output += `<span class="status-ok">✓ ${container.name} container found</span>\n`;
+                    output += `  - ID: ${container.id}\n`;
+                    output += `  - InnerHTML length: ${element.innerHTML.length}\n`;
+                    output += `  - Style display: ${element.style.display}\n`;
+                } else {
+                    output += `<span class="status-error">✗ ${container.name} container NOT found</span>\n`;
+                }
+            });
+            
+            status.innerHTML = output;
+        }
+
+        function testPatternLock() {
+            const status = document.getElementById('patternStatus');
+            const container = document.getElementById('patternTestContainer');
+            let output = 'Testing pattern lock...\n\n';
+            
+            try {
+                // Check if SimplePatternLock exists
+                if (typeof SimplePatternLock === 'undefined') {
+                    output += '<span class="status-error">✗ SimplePatternLock class not available</span>\n';
+                    status.innerHTML = output;
+                    return;
+                }
+                
+                output += '<span class="status-ok">✓ SimplePatternLock class available</span>\n';
+                
+                // Clear container
+                container.innerHTML = '';
+                
+                // Create test pattern lock
+                const patternLock = new SimplePatternLock('patternTestContainer', {
+                    mode: 'setup',
+                    title: 'Test Pattern Lock',
+                    subtitle: 'Draw a pattern to test functionality',
+                    minDots: 4,
+                    onComplete: function(pattern) {
+                        output += `<span class="status-ok">✓ Pattern completed: [${pattern.join(', ')}]</span>\n`;
+                        status.innerHTML = output;
+                        alert(`Pattern completed: [${pattern.join(', ')}]`);
+                    },
+                    onError: function(error) {
+                        output += `<span class="status-error">✗ Pattern error: ${error}</span>\n`;
+                        status.innerHTML = output;
+                    }
+                });
+                
+                if (patternLock) {
+                    output += '<span class="status-ok">✓ Pattern lock instance created successfully</span>\n';
+                    
+                    // Check if UI was created
+                    const dots = container.querySelectorAll('.pattern-dot');
+                    output += `✓ Found ${dots.length} pattern dots\n`;
+                    
+                    if (dots.length === 0) {
+                        output += '<span class="status-warning">⚠ No pattern dots found - UI may not have rendered</span>\n';
+                    }
+                } else {
+                    output += '<span class="status-error">✗ Failed to create pattern lock instance</span>\n';
+                }
+                
+            } catch (error) {
+                output += `<span class="status-error">✗ Error: ${error.message}</span>\n`;
+                output += `Stack: ${error.stack}\n`;
+            }
+            
+            status.innerHTML = output;
+        }
+
+        function testScriptLoading() {
+            const status = document.getElementById('scriptStatus');
+            let output = 'Testing script loading...\n\n';
+            
+            // Check if script tags exist
+            const scripts = document.querySelectorAll('script[src*="pattern-lock"]');
+            output += `Found ${scripts.length} pattern lock script(s):\n`;
+            
+            scripts.forEach((script, index) => {
+                output += `${index + 1}. ${script.src}\n`;
+                output += `   - Loaded: ${script.readyState || 'unknown'}\n`;
+            });
+            
+            // Try to load script manually if not found
+            if (typeof SimplePatternLock === 'undefined') {
+                output += '\nAttempting manual script load...\n';
+                const script = document.createElement('script');
+                script.src = 'static/pattern-lock-simple.js';
+                script.onload = function() {
+                    output += '<span class="status-ok">✓ Script loaded manually successfully</span>\n';
+                    status.innerHTML = output;
+                    checkDependencies();
+                };
+                script.onerror = function() {
+                    output += '<span class="status-error">✗ Failed to load script manually</span>\n';
+                    status.innerHTML = output;
+                };
+                document.head.appendChild(script);
+            }
+            
+            status.innerHTML = output;
+        }
+
+        // Auto-run checks on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, starting diagnostic...');
+            
+            setTimeout(() => {
+                checkDependencies();
+                checkHTMLStructure();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
