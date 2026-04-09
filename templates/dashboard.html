@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Women Security System - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard-professional.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Language Selector Styles -->
+    <style>
+        /* SMS Gateway Section Styles */
+        .sms-gateway-dashboard {
+            padding: 20px;
+        }
+        
+        .sms-contacts-section,
+        .quick-emergency-sms,
+        .custom-sms-section,
+        .sms-status-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sms-contacts-section h4,
+        .quick-emergency-sms h4,
+        .custom-sms-section h4,
+        .sms-status-section h4 {
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sms-status-section {
+            display: none;
+        }
+        
+        .sms-status-section.show {
+            display: block;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        /* Language Selector - Professional Header Integration */
+        .header-language-selector {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        .header-language-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header-language-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .header-language-btn i {
+            font-size: 14px;
+        }
+        
+        .header-language-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            min-width: 150px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 99999;
+            overflow: hidden;
+            animation: dropdownFadeIn 0.2s ease;
+        }
+        
+        .header-language-dropdown.show {
+            display: block;
+        }
+        
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .lang-option:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .lang-option.active {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .lang-option i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="shield-loader">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 data-translate="womenSecuritySystem">Women Security System</h3>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p data-translate="initializingSecurity">Initializing security features...</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        <!-- Enhanced Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-section">
+                    <i class="fas fa-shield-alt logo-icon"></i>
+                    <div class="logo-text">
+                        <h2>SafeGuard</h2>
+                        <span class="logo-subtitle">Women Security System</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Hamburger Menu Button -->
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileNav()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-center">
+                <div class="status-indicators">
+                    <div class="status-item" id="locationStatus">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span data-translate="locationInactive">Location: Inactive</span>
+                    </div>
+                    <div class="status-item" id="emergencyStatus">
+                        <i class="fas fa-shield-check"></i>
+                        <span data-translate="statusSafe">Status: Safe</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <!-- Language Selector -->
+                <div class="header-language-selector">
+                    <button class="header-language-btn" id="languageBtn" onclick="toggleLanguageDropdown()">
+                        <i class="fas fa-globe"></i>
+                        <span id="currentLangText">English</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="header-language-dropdown" id="languageDropdown">
+                        <button class="lang-option active" data-lang="en" onclick="setLanguage('en')">
+                            <i class="fas fa-check"></i> English
+                        </button>
+                        <button class="lang-option" data-lang="hi" onclick="setLanguage('hi')">
+                            <i class="fas fa-globe"></i> हिंदी
+                        </button>
+                        <button class="lang-option" data-lang="ta" onclick="setLanguage('ta')">
+                            <i class="fas fa-globe"></i> தமிழ்
+                        </button>
+                        <button class="lang-option" data-lang="te" onclick="setLanguage('te')">
+                            <i class="fas fa-globe"></i> తెలుగు
+                        </button>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">{{ session.username }}</span>
+                        <span class="user-status" data-translate="online">Online</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" onclick="toggleNotifications()" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="headerNotificationBadge">0</span>
+                    </button>
+                    <a href="{{ url_for('logout') }}" class="header-btn logout-btn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Nav Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
+        
+        <!-- Enhanced Navigation -->
+        <nav class="dashboard-nav">
+            <div class="nav-container">
+                <button class="nav-btn active" onclick="showSection('overview')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span data-translate="overview">Overview</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('location')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-translate="liveLocationNav">Live Location</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('shelters')">
+                    <i class="fas fa-home"></i>
+                    <span data-translate="safeSheltersNav">Safe Shelters</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('emergency')">
+                    <i class="fas fa-phone"></i>
+                    <span data-translate="emergencyNav">Emergency</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('sms-gateway')">
+                    <i class="fas fa-sms"></i>
+                    <span data-translate="smsGateway">SMS Gateway</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('complaints')">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span data-translate="complaints">Complaints</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('ai-assistant')">
+                    <i class="fas fa-robot"></i>
+                    <span data-translate="aiAssistantNav">AI Assistant</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('tips')">
+                    <i class="fas fa-lightbulb"></i>
+                    <span data-translate="safetyTips">Safety Tips</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Main Content Area -->
+        <main class="dashboard-main">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="overview-header">
+                    <h3><i class="fas fa-chart-line"></i> <span data-translate="securityDashboard">Security Dashboard Overview</span></h3>
+                    <div class="overview-actions">
+                        <button class="btn btn-primary" onclick="emergencyAlert()">
+                            <i class="fas fa-exclamation-triangle"></i> <span data-translate="emergencyAlert">Emergency Alert</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overview-grid">
+                    <!-- Quick Stats Cards -->
+                    <div class="stat-card">
+                        <div class="stat-icon location-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 data-translate="locationStatus">Location Status</h4>
+                            <p id="overviewLocation" data-translate="notTracking">Not Tracking</p>
+                            <small data-translate="clickToActivate">Click to activate</small>
+                        </div>
+                        <button class="stat-action" onclick="showSection('location')">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon shelter-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 data-translate="safeSheltersNearby">Safe Shelters</h4>
+                            <p id="overviewShelters" data-translate="nearbyShelters">3 Nearby</p>
+                            <small data-translate="viewLocations">View locations</small>
+                        </div>
+                        <button class="stat-action" onclick="showSection('shelters')">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon emergency-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 data-translate="emergencyContacts">Emergency Contacts</h4>
+                            <p data-translate="availableContacts">4 Available</p>
+                            <small data-translate="quickAccess">Quick access</small>
+                        </div>
+                        <button class="stat-action" onclick="showSection('emergency')">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 data-translate="aiAssistantReady">AI Assistant</h4>
+                            <p id="overviewAI" data-translate="ready">Ready</p>
+                            <small data-translate="voiceText">Voice & text</small>
+                        </div>
+                        <button class="stat-action" onclick="showSection('ai-assistant')">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h4><i class="fas fa-clock"></i> <span data-translate="recentActivity">Recent Activity</span></h4>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p data-translate="accountCreated">Account created successfully</p>
+                                <small data-translate="justNow">Just now</small>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p data-translate="securityInitialized">Security system initialized</p>
+                                <small data-translate="justNow">Just now</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations Section -->
+                <div class="recommendations-section">
+                    <h4><i class="fas fa-star"></i> <span data-translate="recommendations">Personalized Recommendations</span></h4>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Recommendations will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Live Location Section -->
+            <section id="location" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-map-marker-alt"></i> <span data-translate="liveLocationNav">Live Location Tracking</span></h3>
+                    <div class="section-actions">
+                        <button id="startTracking" class="btn btn-primary" onclick="startLocationTracking()">
+                            <i class="fas fa-play"></i> <span data-translate="startTracking">Start Tracking</span>
+                        </button>
+                        <button id="stopTracking" class="btn btn-secondary" onclick="stopLocationTracking()" disabled>
+                            <i class="fas fa-stop"></i> <span data-translate="stopTracking">Stop Tracking</span>
+                        </button>
+                        <button class="btn btn-success" onclick="shareLocation()">
+                            <i class="fas fa-share"></i> <span data-translate="shareLocation">Share Location</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="location-dashboard">
+                    <div class="location-controls">
+                        <div class="control-group">
+                            <label data-translate="trackingInterval">Tracking Interval</label>
+                            <select id="trackingInterval" onchange="updateTrackingInterval()">
+                                <option value="10000" data-translate="every10Seconds">Every 10 seconds</option>
+                                <option value="30000" selected data-translate="every30Seconds">Every 30 seconds</option>
+                                <option value="60000" data-translate="every1Minute">Every 1 minute</option>
+                                <option value="300000" data-translate="every5Minutes">Every 5 minutes</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label data-translate="accuracyLevel">Accuracy Level</label>
+                            <select id="accuracyLevel" onchange="updateAccuracyLevel()">
+                                <option value="low" data-translate="lowFaster">Low (Faster)</option>
+                                <option value="balanced" selected data-translate="balanced">Balanced</option>
+                                <option value="high" data-translate="highSlower">High (Slower)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="location-main">
+                        <div id="map" class="location-map"></div>
+                        <div class="location-sidebar">
+                            <div class="location-status-card">
+                                <h4 data-translate="currentStatus">Current Status</h4>
+                                <div class="status-details">
+                                    <div class="status-row">
+                                        <span data-translate="tracking">Tracking:</span>
+                                        <span id="trackingStatus" data-translate="inactive">Inactive</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span data-translate="lastUpdate">Last Update:</span>
+                                        <span id="lastUpdate" data-translate="never">Never</span>
+                                    </div>
+                                    <div class="status-row">
+                                        <span data-translate="accuracy">Accuracy:</span>
+                                        <span id="accuracy" data-translate="na">N/A</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="location-history">
+                                <h4 data-translate="locationHistory">Location History</h4>
+                                <div id="locationHistory" class="history-list">
+                                    <p class="no-history" data-translate="noLocationData">No location data yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Safe Shelters Section -->
+            <section id="shelters" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-home"></i> Safe Night Shelters</h3>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshShelters()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-success" onclick="showNearbyShelters()">
+                            <i class="fas fa-search"></i> Find Nearby
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="shelters-dashboard">
+                    <div class="shelters-controls">
+                        <div class="search-box">
+                            <input type="text" id="shelterSearch" placeholder="Search shelters..." onkeyup="filterShelters()">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-options">
+                            <select id="shelterFilter" onchange="filterShelters()">
+                                <option value="all">All Shelters</option>
+                                <option value="nearby">Near Me</option>
+                                <option value="available">Available Now</option>
+                                <option value="high-rated">High Rated (4+)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="shelters-main">
+                        <div id="sheltersList" class="shelters-list"></div>
+                        <div id="shelterMap" class="shelters-map"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Emergency Section -->
+            <section id="emergency" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-phone"></i> <span data-translate="emergencyFeaturesTitle">Emergency Features</span></h3>
+                    <div class="emergency-alert-banner">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span data-translate="emergencyServices247">Emergency services are available 24/7</span>
+                    </div>
+                </div>
+                
+                <div class="emergency-dashboard">
+                    <div class="emergency-main">
+                        <div class="emergency-primary">
+                            <div class="emergency-title">
+                                <h4 data-translate="emergencyActions">Emergency Actions</h4>
+                                <p data-translate="quickAccessCritical">Quick access to critical safety features</p>
+                            </div>
+                            <div class="emergency-buttons">
+                                <button class="emergency-btn siren-btn" onclick="activateSiren()">
+                                    <div class="btn-content">
+                                        <i class="fas fa-bell"></i>
+                                        <div class="btn-text">
+                                            <span class="btn-title" data-translate="activateSiren">Activate Siren</span>
+                                            <span class="btn-subtitle" data-translate="loudAlarm">Loud alarm to attract attention</span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-status">
+                                        <div class="status-dot"></div>
+                                    </div>
+                                </button>
+                                
+                                <button class="emergency-btn call-btn" onclick="initiateFakeCall()">
+                                    <div class="btn-content">
+                                        <i class="fas fa-phone"></i>
+                                        <div class="btn-text">
+                                            <span class="btn-title" data-translate="fakeCall">Fake Call</span>
+                                            <span class="btn-subtitle" data-translate="simulateEmergencyCall">Simulate emergency call</span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-status">
+                                        <div class="status-dot"></div>
+                                    </div>
+                                </button>
+                                
+                                <button class="emergency-btn share-btn" onclick="emergencyShareLocation()">
+                                    <div class="btn-content">
+                                        <i class="fas fa-location-arrow"></i>
+                                        <div class="btn-text">
+                                            <span class="btn-title" data-translate="emergencyAlertAction">Emergency Alert</span>
+                                            <span class="btn-subtitle" data-translate="shareLocationContacts">Share location with contacts</span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-status">
+                                        <div class="status-dot"></div>
+                                    </div>
+                                </button>
+                                
+                                <button class="emergency-btn alert-btn" onclick="sendEmergencyAlert()">
+                                    <div class="btn-content">
+                                        <i class="fas fa-exclamation"></i>
+                                        <div class="btn-text">
+                                            <span class="btn-title" data-translate="alertAuthorities">Alert Authorities</span>
+                                            <span class="btn-subtitle" data-translate="notifyEmergencyServices">Notify emergency services</span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-status">
+                                        <div class="status-dot"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="emergency-contacts">
+                            <h4 data-translate="emergencyContactsTitle">Emergency Contacts</h4>
+                            <div class="contacts-list">
+                                <div class="contact-card">
+                                    <div class="contact-icon police">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h5 data-translate="police">Police</h5>
+                                        <p data-translate="forEmergencies">For emergencies and crimes</p>
+                                        <span class="contact-number">100</span>
+                                    </div>
+                                    <button onclick="callEmergency('100')" class="contact-call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="contact-card">
+                                    <div class="contact-icon ambulance">
+                                        <i class="fas fa-ambulance"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h5 data-translate="ambulance">Ambulance</h5>
+                                        <p data-translate="medicalEmergencies">Medical emergencies</p>
+                                        <span class="contact-number">108</span>
+                                    </div>
+                                    <button onclick="callEmergency('108')" class="contact-call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="contact-card">
+                                    <div class="contact-icon fire">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h5 data-translate="fireBrigade">Fire Brigade</h5>
+                                        <p data-translate="fireEmergencies">Fire emergencies</p>
+                                        <span class="contact-number">101</span>
+                                    </div>
+                                    <button onclick="callEmergency('101')" class="contact-call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="contact-card">
+                                    <div class="contact-icon women-helpline">
+                                        <i class="fas fa-female"></i>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h5 data-translate="womenHelpline">Women Helpline</h5>
+                                        <p data-translate="womenSpecificSupport">Women-specific support</p>
+                                        <span class="contact-number">1091</span>
+                                    </div>
+                                    <button onclick="callEmergency('1091')" class="contact-call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="current-contacts" id="currentContacts">
+                                <!-- Current contacts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Emergency SMS -->
+                    <div class="quick-emergency-sms">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Quick Emergency SMS</h4>
+                        <div class="emergency-sms-options">
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <h5>Location Share Emergency</h5>
+                                </div>
+                                <p>Send emergency alert with your current location to all contacts</p>
+                            <button class="btn btn-danger" onclick="sendEmergencySMS()">
+                                    <i class="fas fa-paper-plane"></i> Send Location Emergency
+                                </button>
+                            </div>
+                            
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <h5>Call for Help</h5>
+                                </div>
+                                <p>Send urgent help request message to emergency contacts</p>
+                            <button class="btn btn-danger" onclick="sendEmergencySMS()">
+                                    <i class="fas fa-paper-plane"></i> Send Help Request
+                                </button>
+                            </div>
+                            
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h5>Custom Emergency</h5>
+                                </div>
+                                <p>Send custom emergency message with your own text</p>
+                                <button class="btn btn-warning" onclick="showCustomSMSPopup()">
+                                    <i class="fas fa-edit"></i> Custom Message
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom SMS Form -->
+                    <div class="custom-sms-section">
+                        <h4><i class="fas fa-edit"></i> Custom SMS Message</h4>
+                        <form id="customSMSForm" onsubmit="sendCustomSMS(event)">
+                            <div class="form-group">
+                                <label for="customSMSRecipient">Recipient Phone Number *</label>
+                                <input type="tel" id="customSMSRecipient" placeholder="+91XXXXXXXXXX" required>
+                                <small>Enter multiple numbers separated by commas for bulk SMS</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customSMSMessage">Message *</label>
+                                <textarea id="customSMSMessage" rows="4" placeholder="Type your emergency message here..." required></textarea>
+                                <div class="message-counter">
+                                    <span id="charCount">0</span> / 160 characters
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Send SMS
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="clearCustomSMS()">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- SMS Status Display -->
+                    <div class="sms-status-section" id="smsStatusSection" style="display: none;">
+                        <h4><i class="fas fa-info-circle"></i> SMS Status</h4>
+                        <div class="status-messages" id="smsStatusMessages">
+                            <!-- SMS status messages will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SMS Gateway Section -->
+            <section id="sms-gateway" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-sms"></i> SMS Gateway - Emergency Messaging</h3>
+                    <div class="section-actions">
+                        <button class="btn btn-info" onclick="showSMSHistory()">
+                            <i class="fas fa-history"></i> SMS History
+                        </button>
+                        <button class="btn btn-warning" onclick="testSMSGatewayWithPrompt()">
+                            <i class="fas fa-vial"></i> Test SMS
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sms-gateway-dashboard">
+                    <!-- Emergency Contacts Setup -->
+                    <div class="sms-contacts-section">
+                        <h4><i class="fas fa-user-friends"></i> Emergency Contacts</h4>
+                        <div class="contacts-management">
+                            <div class="contact-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="emergencyContactName">Contact Name</label>
+                                        <input type="text" id="emergencyContactName" placeholder="Enter contact name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="emergencyContactPhone">Phone Number *</label>
+                                        <input type="tel" id="emergencyContactPhone" placeholder="+91XXXXXXXXXX" required>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="updateEmergencyContacts()">
+                                    <i class="fas fa-save"></i> Save Contact
+                                </button>
+                            </div>
+                            
+                            <div class="current-contacts" id="currentContacts">
+                                <!-- Current contacts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Emergency SMS -->
+                    <div class="quick-emergency-sms">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Quick Emergency SMS</h4>
+                        <div class="emergency-sms-options">
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <h5>Location Share Emergency</h5>
+                                </div>
+                                <p>Send emergency alert with your current location to all contacts</p>
+                                <button class="btn btn-danger" onclick="sendLocationEmergencySMS()">
+                                    <i class="fas fa-paper-plane"></i> Send Location Emergency
+                                </button>
+                            </div>
+                            
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <h5>Call for Help</h5>
+                                </div>
+                                <p>Send urgent help request message to emergency contacts</p>
+                                <button class="btn btn-danger" onclick="sendHelpEmergencySMS()">
+                                    <i class="fas fa-paper-plane"></i> Send Help Request
+                                </button>
+                            </div>
+                            
+                            <div class="sms-option-card">
+                                <div class="option-header">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h5>Custom Emergency</h5>
+                                </div>
+                                <p>Send custom emergency message with your own text</p>
+                                <button class="btn btn-warning" onclick="showCustomSMSPopup()">
+                                    <i class="fas fa-edit"></i> Custom Message
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom SMS Form -->
+                    <div class="custom-sms-section">
+                        <h4><i class="fas fa-edit"></i> Custom SMS Message</h4>
+                        <form id="customSMSForm" onsubmit="sendCustomSMS(event)">
+                            <div class="form-group">
+                                <label for="customSMSRecipient">Recipient Phone Number *</label>
+                                <input type="tel" id="customSMSRecipient" placeholder="+91XXXXXXXXXX" required>
+                                <small>Enter multiple numbers separated by commas for bulk SMS</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customSMSMessage">Message *</label>
+                                <textarea id="customSMSMessage" rows="4" placeholder="Type your emergency message here..." required></textarea>
+                                <div class="message-counter">
+                                    <span id="charCount">0</span> / 160 characters
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Send SMS
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="clearCustomSMS()">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- SMS Status Display -->
+                    <div class="sms-status-section" id="smsStatusSection" style="display: none;">
+                        <h4><i class="fas fa-info-circle"></i> SMS Status</h4>
+                        <div class="status-messages" id="smsStatusMessages">
+                            <!-- SMS status messages will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Complaints Section -->
+            <section id="complaints" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> <span data-translate="complaintBox">Complaint Box</span></h3>
+                    <div class="section-actions">
+                        <button class="btn btn-info" onclick="showComplaintHistory()">
+                            <i class="fas fa-history"></i> <span data-translate="viewHistory">View History</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="complaints-dashboard">
+                    <div class="complaint-form-section">
+                        <h4 data-translate="submitNewComplaint">Submit New Complaint</h4>
+                        <form id="complaintForm" class="complaint-form" onsubmit="submitComplaint(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="complaintTitle" data-translate="title">Title *</label>
+                                    <input type="text" id="complaintTitle" placeholder="Brief description of the issue" data-translate-placeholder="briefDescription" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="complaintCategory" data-translate="category">Category *</label>
+                                    <select id="complaintCategory" required>
+                                        <option value="" data-translate="selectCategory">Select Category</option>
+                                        <option value="harassment" data-translate="harassment">Harassment</option>
+                                        <option value="safety" data-translate="safetyConcern">Safety Concern</option>
+                                        <option value="emergency" data-translate="emergencyCategory">Emergency</option>
+                                        <option value="suspicious" data-translate="suspiciousActivity">Suspicious Activity</option>
+                                        <option value="other" data-translate="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="complaintDescription" data-translate="detailedDescription">Detailed Description *</label>
+                                <textarea id="complaintDescription" rows="4" placeholder="Provide detailed information about the incident..." data-translate-placeholder="provideDetails" required></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="complaintLocation" data-translate="locationOptional">Location (Optional)</label>
+                                    <input type="text" id="complaintLocation" placeholder="Where did this occur?" data-translate-placeholder="whereOccurred">
+                                </div>
+                                <div class="form-group">
+                                    <label for="complaintTime" data-translate="timeOptional">Time (Optional)</label>
+                                    <input type="datetime-local" id="complaintTime">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="complaintAttachments" data-translate="attachmentsOptional">Attachments (Optional)</label>
+                                <input type="file" id="complaintAttachments" multiple accept="image/*,video/*">
+                                <small data-translate="uploadEvidence">Upload photos or videos as evidence</small>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary submit-btn">
+                                <i class="fas fa-paper-plane"></i> <span data-translate="submitComplaint">Submit Complaint</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="complaint-guidelines">
+                        <h4 data-translate="guidelines">Guidelines</h4>
+                        <div class="guidelines-list">
+                            <div class="guideline-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-translate="provideAccurate">Provide accurate and detailed information</span>
+                            </div>
+                            <div class="guideline-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-translate="includeSpecific">Include specific locations and times</span>
+                            </div>
+                            <div class="guideline-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-translate="uploadRelevant">Upload relevant evidence if available</span>
+                            </div>
+                            <div class="guideline-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span data-translate="contactEmergency">Contact emergency services for immediate danger</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Complaint History Modal -->
+                <div id="complaintHistoryModal" class="history-modal">
+                    <div class="history-modal-content">
+                        <div class="history-modal-header">
+                            <h3><i class="fas fa-history"></i> <span data-translate="complaintHistory">Complaint History</span></h3>
+                            <button onclick="closeComplaintHistory()" class="close-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="history-filters">
+                            <select id="historyFilter" onchange="filterHistory()">
+                                <option value="all" data-translate="allComplaints">All Complaints</option>
+                                <option value="pending" data-translate="pending">Pending</option>
+                                <option value="in-progress" data-translate="inProgress">In Progress</option>
+                                <option value="resolved" data-translate="resolved">Resolved</option>
+                            </select>
+                            <input type="date" id="historyDateFilter" onchange="filterHistory()">
+                        </div>
+                        <div id="complaintHistoryList" class="history-list">
+                            <!-- Complaints will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- AI Assistant Section -->
+            <section id="ai-assistant" class="content-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-robot"></i> <span data-translate="personalAI">Personal AI Assistant</span></h3>
+                    <div class="ai-status">
+                        <span class="status-indicator" id="aiStatus" data-translate="readyAI">Ready</span>
+                    </div>
+                </div>
+                
+                <div class="ai-dashboard">
+                    <div class="ai-controls">
+                        <div class="control-panel">
+                            <h4>Voice Assistant</h4>
+                            <div class="voice-controls">
+                                <button id="startAI" class="btn btn-primary" onclick="startAIAssistant()">
+                                    <i class="fas fa-microphone"></i> Start Listening
+                                </button>
+                                <button id="stopAI" class="btn btn-secondary" onclick="stopAIAssistant()" disabled>
+                                    <i class="fas fa-microphone-slash"></i> Stop
+                                </button>
+                                <div class="voice-indicator" id="voiceIndicator">
+                                <div class="voice-indicator" id="voiceIndicator">
+                                    <div class="voice-wave">
+                                        <div class="wave"></div>
+                                        <span>Listening...</span>
+                                    </div>
+                                </div>                                    <div class</div>
+                                    <span>Listening...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-suggestions">
+                            <h4>Quick Commands</h4>
+                            <div class="suggestion-buttons">
+                                <button class="suggestion-btn" onclick="sendQuickCommand('emergency')">
+                                    <i class="fas fa-exclamation-triangle"></i> Emergency
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickCommand('location')">
+                                    <i class="fas fa-map-marker-alt"></i> Share Location
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickCommand('safe place')">
+                                    <i class="fas fa-home"></i> Find Safe Place
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickCommand('fake call')">
+                                    <i class="fas fa-phone"></i> Fake Call
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-chat-container">
+                        <div class="ai-chat">
+                            <div class="chat-header">
+                                <div class="chat-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="chat-info">
+                                    <h4>Safety Assistant</h4>
+                                    <p>Your personal security companion</p>
+                                </div>
+                                <div class="chat-status">
+                                    <div class="status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                            
+                            <div id="aiMessages" class="ai-messages">
+                                <div class="message assistant-message">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <p>Hello! I'm your personal safety assistant. I can help you with emergency procedures, location sharing, finding safe places, and safety tips. How can I assist you today?</p>
+                                        <span class="message-time">Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ai-input-container">
+                                <div class="ai-input">
+                                    <input type="text" id="aiTextInput" placeholder="Type your message or question..." onkeypress="handleAIEnter(event)">
+                                    <button onclick="sendAIMessage()" class="send-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <div class="input-suggestions">
+                                    <span>Try: "Help me with safety tips" or "Share my location"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Enhanced Safety Tips Section -->
+ <section id="tips" class="content-section">
+   <div class="section-header">
+       <div class="header-content">
+           <h3><i class="fas fa-lightbulb"></i> <span data-translate="emergencyTips">Emergency Tips & Information</span></h3>
+           <p class="section-description" data-translate="tipsDescription">Stay informed with expert safety advice and practical tips to protect yourself in various situations.</p>
+       </div>
+       <div class="section-actions">
+           <button class="btn btn-info" onclick="refreshTips()">
+               <i class="fas fa-sync-alt"></i> <span data-translate="refreshTips">Refresh Tips</span>
+           </button>
+           <span class="tip-counter" id="tipCounter" data-translate="tipsAvailable">0 tips available</span>
+       </div>
+   </div>
+   
+    <div class="tips-dashboard">
+        <!-- Featured Tip Section -->
+        <div class="featured-tip">
+            <div class="featured-tip-content">
+                <i class="fas fa-shield-alt featured-tip-icon"></i>
+                <div class="featured-tip-text">
+                    <h4 data-translate="featuredSafetyTip">Featured Safety Tip</h4>
+                    <p id="featuredTipText" class="featured-tip-description" data-translate="trustYourInstincts">Trust your instincts. If something feels wrong, it probably is.</p>
+                    <div class="tip-actions">
+                        <button class="btn btn-sm btn-outline-primary" onclick="nextTip()">
+                            <i class="fas fa-sync-alt"></i> <span data-translate="nextTip">Next Tip</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+       <div class="tips-categories">
+           <div class="category-filter">
+               <button class="category-btn active" onclick="filterTips('all')" data-translate="allTips">
+                   <i class="fas fa-list"></i> <span data-translate="allTips">All Tips</span>
+               </button>
+               <button class="category-btn" onclick="filterTips('general')" data-translate="generalSafety">
+                   <i class="fas fa-home"></i> <span data-translate="generalSafety">General Safety</span>
+               </button>
+               <button class="category-btn" onclick="filterTips('travel')" data-translate="travelSafety">
+                   <i class="fas fa-plane"></i> <span data-translate="travelSafety">Travel Safety</span>
+               </button>
+               <button class="category-btn" onclick="filterTips('technology')" data-translate="technology">
+                   <i class="fas fa-laptop"></i> <span data-translate="technology">Technology</span>
+               </button>
+               <button class="category-btn" onclick="filterTips('emergency')" data-translate="emergencyCategoryTips">
+                   <i class="fas fa-exclamation-triangle"></i> <span data-translate="emergencyCategoryTips">Emergency</span>
+               </button>
+           </div>
+       </div>
+       
+       <div id="tipsList" class="tips-grid tips-grid-enhanced"></div>
+   </div>
+</section>
+        </main>
+    </div>
+    
+    <!-- Floating Emergency Button -->
+    <div class="floating-emergency" onclick="emergencyAlert()">
+        <div class="floating-btn">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="floating-label">Emergency</div>
+    </div>
+    
+    <!-- Notifications Panel - Premium Professional Design -->
+    <div id="notificationsPanel" class="notifications-panel">
+        <div class="notifications-header">
+            <div class="notifications-overlay"></div>
+            <div class="notifications-title-row">
+                <div class="notifications-icon-wrapper">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-pulse"></span>
+                </div>
+                <div class="notifications-title-content">
+                    <h4>Notifications</h4>
+                    <p class="notifications-subtitle">Stay updated with your security</p>
+                </div>
+            </div>
+            <div class="notifications-actions">
+                <div class="search-notifications">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search notifications..." id="notificationSearch" onkeyup="searchNotifications(this.value)">
+                </div>
+                <div class="action-buttons">
+                    <button class="header-action-btn" onclick="markAllAsRead()" title="Mark all as read">
+                        <i class="fas fa-check-double"></i>
+                        <span class="action-tooltip">Mark all read</span>
+                    </button>
+                    <button class="header-action-btn" onclick="openNotificationSettings()" title="Settings">
+                        <i class="fas fa-cog"></i>
+                        <span class="action-tooltip">Settings</span>
+                    </button>
+                    <button class="header-action-btn" onclick="toggleNotifications()" title="Close">
+                        <i class="fas fa-times"></i>
+                        <span class="action-tooltip">Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="notifications-tabs">
+            <button class="tab-notification active" data-filter="all" onclick="filterNotifications('all', this)">
+                <i class="fas fa-layer-group"></i>
+                <span>All</span>
+                <span class="tab-count" id="countAll">3</span>
+            </button>
+            <button class="tab-notification" data-filter="unread" onclick="filterNotifications('unread', this)">
+                <i class="fas fa-envelope"></i>
+                <span>Unread</span>
+                <span class="tab-count unread" id="countUnread">2</span>
+            </button>
+            <button class="tab-notification" data-filter="important" onclick="filterNotifications('important', this)">
+                <i class="fas fa-star"></i>
+                <span>Important</span>
+                <span class="tab-count" id="countImportant">1</span>
+            </button>
+            <button class="tab-notification" data-filter="emergency" onclick="filterNotifications('emergency', this)">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Emergency</span>
+                <span class="tab-count emergency" id="countEmergency">0</span>
+            </button>
+        </div>
+        
+        <!-- Notification Quick Filters -->
+        <div class="notification-quick-filters">
+            <div class="filter-group">
+                <label><i class="fas fa-clock"></i> Time:</label>
+                <select id="notificationTimeFilter" onchange="applyTimeFilter(this.value)">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-sort-amount-down"></i> Sort:</label>
+                <select id="notificationSort" onchange="sortNotifications(this.value)">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="priority">Priority</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="notifications-list" id="notificationsList">
+            <!-- Notifications will be loaded here dynamically -->
+        </div>
+        
+        <!-- Notification Stats Bar -->
+        <div class="notification-stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-bell"></i>
+                <span id="totalNotifications">3</span> Total
+            </div>
+            <div class="stat-item unread-stat">
+                <i class="fas fa-envelope-open"></i>
+                <span id="unreadNotifications">2</span> Unread
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                <span id="readNotifications">1</span> Read
+            </div>
+        </div>
+        
+        <div class="notifications-footer">
+            <button class="footer-btn clear-all" onclick="clearAllNotifications()">
+                <i class="fas fa-trash-alt"></i>
+                <span>Clear All</span>
+            </button>
+            <button class="footer-btn archive" onclick="archiveAllNotifications()">
+                <i class="fas fa-archive"></i>
+                <span>Archive</span>
+            </button>
+            <div class="footer-divider"></div>
+            <button class="footer-btn settings" onclick="openNotificationSettings()">
+                <i class="fas fa-sliders-h"></i>
+                <span>Settings</span>
+            </button>
+            <button class="footer-btn history" onclick="showNotificationHistory()">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Notification Settings Modal -->
+    <div id="notificationSettingsModal" class="notification-modal">
+        <div class="notification-modal-content">
+            <div class="notification-modal-header">
+                <h3><i class="fas fa-cog"></i> Notification Settings</h3>
+                <button onclick="closeNotificationSettings()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notification-modal-body">
+                <div class="settings-section">
+                    <h4><i class="fas fa-bell"></i> Push Notifications</h4>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Emergency Alerts</span>
+                            <span class="setting-desc">Receive instant alerts for emergencies</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="settingEmergency">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Location Updates</span>
+                            <span class="setting-desc">Get notified about location changes</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="settingLocation">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Safety Tips</span>
+                            <span class="setting-desc">Receive personalized safety recommendations</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="settingTips">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4><i class="fas fa-volume-up"></i> Sound & Vibration</h4>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Notification Sound</span>
+                            <span class="setting-desc">Play sound for new notifications</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="settingSound">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Vibration</span>
+                            <span class="setting-desc">Vibrate for important notifications</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="settingVibration">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4><i class="fas fa-clock"></i> Quiet Hours</h4>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Enable Quiet Hours</span>
+                            <span class="setting-desc">Mute notifications during specified time</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="settingQuietHours">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="quiet-hours-time" id="quietHoursTime" style="display: none;">
+                        <div class="time-input-group">
+                            <label>From:</label>
+                            <input type="time" id="quietStart" value="22:00">
+                        </div>
+                        <div class="time-input-group">
+                            <label>To:</label>
+                            <input type="time" id="quietEnd" value="07:00">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4><i class="fas fa-history"></i> Storage</h4>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">Keep History For</span>
+                            <span class="setting-desc">How long to retain notification history</span>
+                        </div>
+                        <select id="retentionPeriod" class="setting-select">
+                            <option value="7">7 Days</option>
+                            <option value="30" selected>30 Days</option>
+                            <option value="90">90 Days</option>
+                            <option value="forever">Forever</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="notification-modal-footer">
+                <button class="btn btn-secondary" onclick="resetNotificationSettings()">
+                    <i class="fas fa-undo"></i> Reset to Default
+                </button>
+                <button class="btn btn-primary" onclick="saveNotificationSettings()">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification History Modal -->
+    <div id="notificationHistoryModal" class="notification-modal">
+        <div class="notification-modal-content notification-history-modal">
+            <div class="notification-modal-header">
+                <h3><i class="fas fa-history"></i> Notification History</h3>
+                <button onclick="closeNotificationHistory()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notification-modal-body">
+                <div class="history-filters-row">
+                    <div class="history-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search history..." id="historySearch" onkeyup="searchHistory(this.value)">
+                    </div>
+                    <select id="historyTypeFilter" onchange="filterHistoryType(this.value)">
+                        <option value="all">All Types</option>
+                        <option value="read">Read</option>
+                        <option value="archived">Archived</option>
+                        <option value="deleted">Deleted</option>
+                    </select>
+                    <select id="historyDateFilter" onchange="filterHistoryDate(this.value)">
+                        <option value="all">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <div class="history-notifications-list" id="historyNotificationsList">
+                    <!-- Archived notifications will be loaded here -->
+                    <div class="empty-history">
+                        <i class="fas fa-inbox"></i>
+                        <h4>No Notification History</h4>
+                        <p>Archived notifications will appear here</p>
+                    </div>
+                </div>
+            </div>
+            <div class="notification-modal-footer">
+                <button class="btn btn-secondary" onclick="clearHistory()">
+                    <i class="fas fa-trash"></i> Clear History
+                </button>
+                <button class="btn btn-primary" onclick="exportHistory()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Detail Modal -->
+    <div id="notificationDetailModal" class="notification-modal">
+        <div class="notification-modal-content notification-detail-modal">
+            <div class="notification-modal-header" id="detailHeader">
+                <h3><i class="fas fa-bell"></i> <span id="detailTitle">Notification Details</span></h3>
+                <button onclick="closeNotificationDetail()" class="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="notification-modal-body">
+                <div class="detail-timestamp">
+                    <i class="fas fa-clock"></i>
+                    <span id="detailTime"></span>
+                </div>
+                <div class="detail-content" id="detailContent">
+                    <!-- Notification content will be loaded here -->
+                </div>
+                <div class="detail-actions">
+                    <button class="btn btn-secondary" onclick="snoozeNotification()">
+                        <i class="fas fa-clock"></i> Snooze
+                    </button>
+                    <button class="btn btn-secondary" onclick="archiveNotification()">
+                        <i class="fas fa-archive"></i> Archive
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteNotification()">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audio Elements -->
+    <audio id="sirenSound" loop>
+        <source src="{{ url_for('static', filename='siren.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="notificationSound">
+        <source src="{{ url_for('static', filename='notification.mp3') }}" type="audio/mpeg">
+    </audio>
+    
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='translations.js') }}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Language selector functions
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const selector = document.querySelector('.header-language-selector');
+            const dropdown = document.getElementById('languageDropdown');
+            if (selector && !selector.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Set language function
+        function setLanguage(lang) {
+            if (window.translator) {
+                window.translator.setLanguage(lang);
+                
+                // Update dropdown UI - remove active from all and add to selected
+                const options = document.querySelectorAll('.lang-option');
+                options.forEach(opt => {
+                    opt.classList.remove('active');
+                    // Reset icon to globe
+                    const icon = opt.querySelector('i');
+                    if (icon) {
+                        icon.className = 'fas fa-globe';
+                    }
+                    // Add active class and check icon to selected
+                    if (opt.dataset.lang === lang) {
+                        opt.classList.add('active');
+                        if (icon) {
+                            icon.className = 'fas fa-check';
+                        }
+                    }
+                });
+                
+                // Update button text
+                const langText = { 'en': 'English', 'hi': 'हिंदी', 'ta': 'தமிழ்', 'te': 'తెలుగు' };
+                document.getElementById('currentLangText').textContent = langText[lang];
+                
+                // Close dropdown
+                document.getElementById('languageDropdown').classList.remove('show');
+            }
+        }
+
+        // Initialize language selector on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show overview section by default
+            showSection('overview');
+            
+            if (window.translator) {
+                const savedLang = window.translator.getLanguage();
+                const langText = { 'en': 'English', 'hi': 'हिंदी', 'ta': 'தமிழ்', 'te': 'తెలుగు' };
+                document.getElementById('currentLangText').textContent = langText[savedLang] || 'English';
+                
+                // Update active state and icons
+                const options = document.querySelectorAll('.lang-option');
+                options.forEach(opt => {
+                    opt.classList.remove('active');
+                    const icon = opt.querySelector('i');
+                    if (icon) icon.className = 'fas fa-globe';
+                    
+                    if (opt.dataset.lang === savedLang) {
+                        opt.classList.add('active');
+                        if (icon) icon.className = 'fas fa-check';
+                    }
+                });
+            }
+        });
+
+        // Global changeLanguage function for backward compatibility
+        function changeLanguage(lang) {
+            setLanguage(lang);
+        }
+
+        // SMS Gateway Functions
+
+        // Load emergency contacts on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEmergencyContacts();
+            setupSMSCharCounter();
+        });
+
+        function loadEmergencyContacts() {
+            fetch('/api/sms/emergency-contacts')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayEmergencyContacts(data.contacts);
+                        // Pre-fill contact form if user has existing contacts
+                        if (data.contacts.length > 0) {
+                            const contact = data.contacts[0];
+                            document.getElementById('emergencyContactPhone').value = contact.phone;
+                            document.getElementById('emergencyContactName').value = contact.name !== 'Emergency Contact' ? contact.name : '';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error loading emergency contacts:', error));
+        }
+
+        function displayEmergencyContacts(contacts) {
+            // Try SMS Gateway contacts first, then emergency section
+            let container = document.getElementById('smsGatewayContacts');
+            if (!container) {
+                container = document.getElementById('emergencyCurrentContacts');
+            }
+            if (!container) {
+                container = document.getElementById('currentContacts');
+            }
+            if (!container) return;
+
+            if (contacts.length === 0) {
+                container.innerHTML = '<p class="no-contacts">No emergency contacts configured. Please add your emergency contact below.</p>';
+                return;
+            }
+
+            container.innerHTML = contacts.map(contact => `
+                <div class="contact-item">
+                    <div class="contact-info">
+                        <i class="fas fa-user"></i>
+                        <div class="contact-details">
+                            <strong>${contact.name}</strong>
+                            <span>${contact.phone}</span>
+                        </div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="btn btn-sm btn-success" onclick="sendTestSMS('${contact.phone}')">
+                            <i class="fas fa-paper-plane"></i> Test
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateEmergencyContacts() {
+            const name = document.getElementById('emergencyContactName').value.trim();
+            const phone = document.getElementById('emergencyContactPhone').value.trim();
+
+            if (!phone) {
+                showSMSError('Please enter a phone number');
+                return;
+            }
+
+            fetch('/api/sms/update-contacts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone_number: phone,
+                    emergency_contact_name: name
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess('Emergency contacts updated successfully!');
+                    loadEmergencyContacts();
+                } else {
+                    showSMSError(data.error || 'Failed to update contacts');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating contacts:', error);
+                showSMSError('Failed to update contacts');
+            });
+        }
+
+        function sendLocationEmergencySMS() {
+            if (!currentLocation) {
+                // Try to get current location
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            currentLocation = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            };
+                            sendLocationEmergencySMS();
+                        },
+                        error => {
+                            showSMSError('Unable to get your location. Please enable location services.');
+                        }
+                    );
+                    return;
+                } else {
+                    showSMSError('Location services not supported');
+                    return;
+                }
+            }
+
+            const message = `🚨 EMERGENCY ALERT! I need immediate help. My current location: https://maps.google.com/?q=${currentLocation.latitude},${currentLocation.longitude}. Please contact emergency services if needed. Sent at ${new Date().toLocaleString()}`;
+            
+            fetch('/api/sms/send-emergency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    custom_message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess(`Emergency SMS sent to ${data.successful_sends} of ${data.total_contacts} contacts!`);
+                } else {
+                    showSMSError(data.error || 'Failed to send emergency SMS');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending emergency SMS:', error);
+                showSMSError('Failed to send emergency SMS');
+            });
+        }
+
+        function sendHelpEmergencySMS() {
+            const message = `🆘 URGENT HELP NEEDED! This is an emergency alert. I need immediate assistance. Please call me or contact emergency services. Time: ${new Date().toLocaleString()}. If I don't respond, please contact authorities.`;
+            
+            fetch('/api/sms/send-emergency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    custom_message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess(`Help request sent to ${data.successful_sends} of ${data.total_contacts} contacts!`);
+                } else {
+                    showSMSError(data.error || 'Failed to send help request');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending help request:', error);
+                showSMSError('Failed to send help request');
+            });
+        }
+
+        function showCustomSMSPopup() {
+            // Scroll to custom SMS form
+            const customForm = document.getElementById('customSMSForm');
+            if (customForm) {
+                customForm.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('customSMSMessage').focus();
+            }
+        }
+
+        function sendCustomSMS(event) {
+            event.preventDefault();
+            
+            const recipient = document.getElementById('customSMSRecipient').value.trim();
+            const message = document.getElementById('customSMSMessage').value.trim();
+
+            if (!recipient || !message) {
+                showSMSError('Please fill in all required fields');
+                return;
+            }
+
+            // Handle multiple recipients
+            const recipients = recipient.split(',').map(r => r.trim()).filter(r => r);
+
+            fetch('/api/sms/send-custom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    recipient: recipients[0], // For now, send to first recipient
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess('SMS sent successfully!');
+                    document.getElementById('customSMSForm').reset();
+                    updateCharCounter();
+                } else {
+                    showSMSError(data.error || 'Failed to send SMS');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending SMS:', error);
+                showSMSError('Failed to send SMS');
+            });
+        }
+
+        function clearCustomSMS() {
+            document.getElementById('customSMSForm').reset();
+            updateCharCounter();
+        }
+
+        function testSMSGatewayWithPrompt() {
+            const testNumber = prompt('Enter a phone number to test SMS (including country code, e.g., +91XXXXXXXXXX):');
+            
+            if (!testNumber) {
+                return;
+            }
+
+            fetch('/api/sms/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    test_number: testNumber
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess('Test SMS sent successfully!');
+                } else {
+                    showSMSError(data.message || 'Test SMS failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error testing SMS:', error);
+                showSMSError('Test SMS failed');
+            });
+        }
+
+        function testSMSGateway() {
+            // This function is called without a number - prompt user
+            testSMSGatewayWithPrompt();
+        }
+
+        function showSMSHistory() {
+            fetch('/api/sms/history')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displaySMSHistory(data.history);
+                    } else {
+                        showSMSError('Failed to load SMS history');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading SMS history:', error);
+                    showSMSError('Failed to load SMS history');
+                });
+        }
+
+        function displaySMSHistory(history) {
+            const statusSection = document.getElementById('smsStatusSection');
+            const statusMessages = document.getElementById('smsStatusMessages');
+            
+            if (!statusSection || !statusMessages) return;
+
+            statusSection.style.display = 'block';
+            
+            if (history.length === 0) {
+                statusMessages.innerHTML = '<p class="no-history">No SMS history found.</p>';
+                return;
+            }
+
+            const historyHTML = history.map(sms => `
+                <div class="sms-history-item ${sms.status}">
+                    <div class="sms-header">
+                        <span class="sms-recipient">${sms.recipient}</span>
+                        <span class="sms-time">${new Date(sms.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="sms-content">
+                        <p class="sms-message">${sms.message}</p>
+                        <div class="sms-status">
+                            <span class="status-badge ${sms.status}">${sms.status.toUpperCase()}</span>
+                            ${sms.error_message ? `<span class="error-message">${sms.error_message}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            statusMessages.innerHTML = `
+                <h5>Recent SMS Activity (${history.length} messages)</h5>
+                ${historyHTML}
+            `;
+        }
+
+        function sendTestSMS(phone) {
+            if (!phone) {
+                if (!confirm('Send test SMS to your emergency contact?')) {
+                    return;
+                }
+                // Try to get the phone from the emergency contact input
+                phone = document.getElementById('emergencyContactPhone').value.trim();
+                if (!phone) {
+                    showSMSError('No phone number available. Please set up emergency contacts first.');
+                    return;
+                }
+            }
+            
+            fetch('/api/sms/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    test_number: phone
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSMSSuccess('Test SMS sent successfully to ' + phone + '!');
+                } else {
+                    showSMSError(data.message || 'Test SMS failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending test SMS:', error);
+                showSMSError('Test SMS failed');
+            });
+        }
+
+        function setupSMSCharCounter() {
+            const textarea = document.getElementById('customSMSMessage');
+            const counter = document.getElementById('charCount');
+            
+            if (textarea && counter) {
+                textarea.addEventListener('input', updateCharCounter);
+                updateCharCounter();
+            } else {
+                // Retry after a short delay in case elements aren't loaded yet
+                setTimeout(() => {
+                    const textareaRetry = document.getElementById('customSMSMessage');
+                    const counterRetry = document.getElementById('charCount');
+                    if (textareaRetry && counterRetry) {
+                        textareaRetry.addEventListener('input', updateCharCounter);
+                        updateCharCounter();
+                    }
+                }, 500);
+            }
+        }
+
+        function updateCharCounter() {
+            const textarea = document.getElementById('customSMSMessage');
+            const counter = document.getElementById('charCount');
+            
+            if (textarea && counter) {
+                const length = textarea.value.length;
+                counter.textContent = length;
+                
+                if (length > 160) {
+                    counter.style.color = '#e74c3c';
+                } else if (length > 140) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#27ae60';
+                }
+            }
+        }
+
+        function showSMSSuccess(message) {
+            showSMSStatus(message, 'success');
+        }
+
+        function showSMSError(message) {
+            showSMSStatus(message, 'error');
+        }
+
+        function showSMSStatus(message, type) {
+            const statusSection = document.getElementById('smsStatusSection');
+            const statusMessages = document.getElementById('smsStatusMessages');
+            
+            if (!statusSection || !statusMessages) return;
+
+            statusSection.style.display = 'block';
+            
+            const statusHTML = `
+                <div class="status-message ${type}">
+                    <div class="status-icon">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    </div>
+                    <div class="status-text">${message}</div>
+                    <button class="status-close" onclick="hideSMSStatus()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            statusMessages.innerHTML = statusHTML;
+
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(hideSMSStatus, 5000);
+            }
+        }
+
+        function hideSMSStatus() {
+            const statusSection = document.getElementById('smsStatusSection');
+            if (statusSection) {
+                statusSection.style.display = 'none';
+            }
+        }
+
+        // Section Navigation Function
+        // Note: showSection is now defined in script.js to avoid conflicts
+
+        function initializeDashboard() {
+            // Add any additional initialization code here
+            console.log('Dashboard initialized');
+        }
+    </script>
+</body>
+</html>

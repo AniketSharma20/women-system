@@ -1,0 +1,807 @@
+<div class="auth-section">
+    <div class="auth-card enhanced-auth-card">
+        <!-- Header -->
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>SafeGuard</span>
+            </div>
+            <p class="auth-subtitle">Your security, our priority</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="auth-tabs enhanced-tabs">
+            <button class="tab-btn active" data-tab="login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Sign In</span>
+                <div class="tab-indicator"></div>
+            </button>
+            <button class="tab-btn" data-tab="register">
+                <i class="fas fa-user-plus"></i>
+                <span>Sign Up</span>
+                <div class="tab-indicator"></div>
+            </button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form active">
+            <div class="form-header">
+                <h3>Welcome Back</h3>
+                <p>Sign in to access your security dashboard</p>
+            </div>
+
+            <form class="auth-form-content enhanced-form">
+                <div class="form-group enhanced-group">
+                    <label for="modalLoginUsername">
+                        <i class="fas fa-user"></i>
+                        Username or Email
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="text"
+                            id="modalLoginUsername"
+                            name="username"
+                            placeholder="Enter your username or email"
+                            required
+                            autocomplete="username"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalLoginUsernameValidation"></div>
+                </div>
+
+                <div class="form-group enhanced-group">
+                    <label for="modalLoginPassword">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="password"
+                            id="modalLoginPassword"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalLoginPasswordValidation"></div>
+                </div>
+
+                <div class="form-options enhanced-options">
+                    <label class="checkbox-wrapper enhanced-checkbox">
+                        <input type="checkbox" id="modalRememberMe">
+                        <span class="checkmark"></span>
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <!-- Authentication Method Toggle -->
+                <div class="auth-method-toggle enhanced-method-toggle">
+                    <div class="method-tabs">
+                        <button type="button" class="method-tab active" data-method="password">
+                            <i class="fas fa-key"></i>
+                            <span>Password</span>
+                        </button>
+                        <button type="button" class="method-tab" data-method="pattern">
+                            <i class="fas fa-th"></i>
+                            <span>Pattern Lock</span>
+                        </button>
+                    </div>
+                    <p class="method-description">Choose your preferred authentication method</p>
+                </div>
+
+                <!-- Pattern Lock Section -->
+                <div id="modalLoginPatternSection" class="pattern-lock-section" style="display: none;">
+                    <div class="pattern-lock-container">
+                        <div id="modalLoginPatternLock"></div>
+                    </div>
+                    <p class="pattern-lock-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Draw your pattern to sign in
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full enhanced-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In to SafeGuard</span>
+                    <div class="btn-loader"></div>
+                    <div class="btn-shine"></div>
+                </button>
+            </form>
+
+            <!-- Social Login -->
+            <div class="social-login enhanced-social">
+                <div class="social-divider">
+                    <span>Or continue with</span>
+                </div>
+                <div class="social-buttons">
+                    <button class="social-btn google-btn">
+                        <i class="fab fa-google"></i>
+                        <span>Google</span>
+                    </button>
+                    <button class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Facebook</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-form">
+            <div class="form-header">
+                <h3>Create Your Account</h3>
+                <p>Join SafeGuard for enhanced security and peace of mind</p>
+            </div>
+
+            <form class="auth-form-content enhanced-form">
+                <!-- Name Fields -->
+                <div class="form-row">
+                    <div class="form-group enhanced-group">
+                        <label for="modalRegisterFirstName">
+                            <i class="fas fa-user"></i>
+                            First Name
+                        </label>
+                        <div class="input-wrapper enhanced-input">
+                            <input
+                                type="text"
+                                id="modalRegisterFirstName"
+                                name="firstName"
+                                placeholder="Enter your first name"
+                                required
+                            >
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="input-validation">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="validation-message" id="modalRegisterFirstNameValidation"></div>
+                    </div>
+
+                    <div class="form-group enhanced-group">
+                        <label for="modalRegisterLastName">
+                            <i class="fas fa-user"></i>
+                            Last Name
+                        </label>
+                        <div class="input-wrapper enhanced-input">
+                            <input
+                                type="text"
+                                id="modalRegisterLastName"
+                                name="lastName"
+                                placeholder="Enter your last name"
+                                required
+                            >
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="input-validation">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="validation-message" id="modalRegisterLastNameValidation"></div>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group enhanced-group">
+                    <label for="modalRegisterUsername">
+                        <i class="fas fa-at"></i>
+                        Username
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="text"
+                            id="modalRegisterUsername"
+                            name="username"
+                            placeholder="Choose a unique username"
+                            required
+                            autocomplete="username"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-at"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalRegisterUsernameValidation"></div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group enhanced-group">
+                    <label for="modalRegisterEmail">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="email"
+                            id="modalRegisterEmail"
+                            name="email"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="email"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalRegisterEmailValidation"></div>
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group enhanced-group">
+                    <label for="modalRegisterPhone">
+                        <i class="fas fa-phone"></i>
+                        Phone Number <span class="optional">(Optional)</span>
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="tel"
+                            id="modalRegisterPhone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                            autocomplete="tel"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalRegisterPhoneValidation"></div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group enhanced-group password-group">
+                    <label for="modalRegisterPassword">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="password"
+                            id="modalRegisterPassword"
+                            name="password"
+                            placeholder="Create a strong password"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalRegisterPasswordValidation"></div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group enhanced-group">
+                    <label for="modalConfirmPassword">
+                        <i class="fas fa-lock"></i>
+                        Confirm Password
+                    </label>
+                    <div class="input-wrapper enhanced-input">
+                        <input
+                            type="password"
+                            id="modalConfirmPassword"
+                            name="confirmPassword"
+                            placeholder="Confirm your password"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="input-validation">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message" id="modalConfirmPasswordValidation"></div>
+                </div>
+
+                <!-- Authentication Method Toggle -->
+                <div class="auth-method-toggle enhanced-method-toggle">
+                    <div class="method-tabs">
+                        <button type="button" class="method-tab active" data-method="password">
+                            <i class="fas fa-key"></i>
+                            <span>Password</span>
+                        </button>
+                        <button type="button" class="method-tab" data-method="pattern">
+                            <i class="fas fa-th"></i>
+                            <span>Pattern Lock</span>
+                        </button>
+                    </div>
+                    <p class="method-description">Set up your preferred authentication method</p>
+                </div>
+
+                <!-- Pattern Lock Section -->
+                <div id="modalRegisterPatternSection" class="pattern-lock-section" style="display: none;">
+                    <div class="pattern-lock-container">
+                        <div id="modalRegisterPatternLock"></div>
+                    </div>
+                    <p class="pattern-lock-info">
+                        <i class="fas fa-info-circle"></i>
+                        Create a pattern lock as an alternative security method for your account.
+                    </p>
+                </div>
+
+                <!-- Agreements -->
+                <div class="form-group enhanced-group">
+                    <label class="checkbox-wrapper enhanced-checkbox agreement">
+                        <input type="checkbox" id="modalAgreeTerms" required>
+                        <span class="checkmark"></span>
+                        <span>I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a></span>
+                    </label>
+                    <div class="validation-message" id="modalAgreeTermsValidation"></div>
+                </div>
+
+                <div class="form-group enhanced-group">
+                    <label class="checkbox-wrapper enhanced-checkbox">
+                        <input type="checkbox" id="modalNewsletter">
+                        <span class="checkmark"></span>
+                        <span>Subscribe to safety tips and security updates</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full enhanced-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create SafeGuard Account</span>
+                    <div class="btn-loader"></div>
+                    <div class="btn-shine"></div>
+                </button>
+            </form>
+        </div>
+
+        <!-- Message Display -->
+        <div id="modalAuthMessage" class="auth-message"></div>
+
+        <!-- Security Footer -->
+        <div class="auth-footer enhanced-footer">
+            <div class="security-badges">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>256-bit Encryption</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Secure & Private</span>
+                </div>
+                <div class="security-badge">
+                    <i class="fas fa-certificate"></i>
+                    <span>GDPR Compliant</span>
+                </div>
+            </div>
+            <p class="security-text">Protected by enterprise-grade security</p>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Pattern Lock Script -->
+<script src="{{ url_for('static', filename='simple_working_pattern_lock.js') }}"></script>
+<script src="{{ url_for('static', filename='auth-enhanced.js') }}"></script>
+
+<script>
+// Enhanced Modal-specific functionality
+class ModalAuthHandler {
+    constructor() {
+        this.isInitialized = false;
+        this.init();
+    }
+
+    init() {
+        if (this.isInitialized) return;
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setupModal());
+        } else {
+            this.setupModal();
+        }
+    }
+
+    setupModal() {
+        this.setupEventListeners();
+        this.initializePatternLocks();
+        this.isInitialized = true;
+        console.log('Modal Auth Handler initialized');
+    }
+
+    setupEventListeners() {
+        // Tab switching
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-btn') || e.target.closest('.tab-btn')) {
+                const tabBtn = e.target.classList.contains('tab-btn') ? e.target : e.target.closest('.tab-btn');
+                const tabName = tabBtn.dataset.tab;
+                this.switchTab(tabName);
+            }
+
+            // Method switching
+            if (e.target.classList.contains('method-tab') || e.target.closest('.method-tab')) {
+                const methodTab = e.target.classList.contains('method-tab') ? e.target : e.target.closest('.method-tab');
+                const method = methodTab.dataset.method;
+                this.switchAuthMethod(method, e);
+            }
+        });
+
+        // Form submissions
+        document.addEventListener('submit', (e) => {
+            if (e.target.classList.contains('enhanced-form')) {
+                e.preventDefault();
+                this.handleFormSubmission(e);
+            }
+        });
+
+        // Password toggle
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('password-toggle') || e.target.closest('.password-toggle')) {
+                const button = e.target.classList.contains('password-toggle') ? e.target : e.target.closest('.password-toggle');
+                const input = button.parentElement.querySelector('input');
+                if (input) {
+                    this.togglePassword(input);
+                }
+            }
+        });
+    }
+
+    switchTab(tabName) {
+        // Hide all forms
+        document.querySelectorAll('.auth-form').forEach(form => {
+            form.classList.remove('active');
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected form
+        const selectedForm = document.getElementById(tabName + 'Form');
+        if (selectedForm) {
+            selectedForm.classList.add('active');
+        }
+        
+        // Add active class to clicked tab
+        const activeTab = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+        }
+
+        // Clear messages
+        this.clearMessage();
+        
+        // Reinitialize pattern locks if needed
+        setTimeout(() => this.initializePatternLocks(), 100);
+    }
+
+    switchAuthMethod(method, event) {
+        // Update global auth system
+        if (window.authSystem) {
+            window.authSystem.currentAuthMethod = method;
+        }
+        
+        // Update active tab
+        document.querySelectorAll('.method-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        if (event && event.target) {
+            const methodTab = event.target.classList.contains('method-tab') ? event.target : event.target.closest('.method-tab');
+            if (methodTab) methodTab.classList.add('active');
+        }
+
+        // Show/hide appropriate sections
+        this.updateAuthMethodSections(method);
+    }
+
+    updateAuthMethodSections(method) {
+        const loginPasswordFields = document.querySelectorAll('#loginForm .form-group:not(.auth-method-toggle):not(.pattern-lock-section)');
+        const loginPatternSection = document.getElementById('modalLoginPatternSection');
+        
+        const registerPasswordFields = document.querySelectorAll('#registerForm .form-group:not(.auth-method-toggle):not(.pattern-lock-section)');
+        const registerPatternSection = document.getElementById('modalRegisterPatternSection');
+
+        if (method === 'pattern') {
+            // Hide password fields, show pattern
+            loginPasswordFields.forEach(field => {
+                if (field.querySelector('input[type="password"]') || field.querySelector('input[name="password"]')) {
+                    field.style.display = 'none';
+                }
+            });
+            if (loginPatternSection) loginPatternSection.style.display = 'block';
+            
+            registerPasswordFields.forEach(field => {
+                if (field.querySelector('input[type="password"]') || field.querySelector('input[name="password"]')) {
+                    field.style.display = 'none';
+                }
+            });
+            if (registerPatternSection) registerPatternSection.style.display = 'block';
+            
+        } else {
+            // Show password fields, hide pattern
+            loginPasswordFields.forEach(field => {
+                field.style.display = 'block';
+            });
+            if (loginPatternSection) loginPatternSection.style.display = 'none';
+            
+            registerPasswordFields.forEach(field => {
+                field.style.display = 'block';
+            });
+            if (registerPatternSection) registerPatternSection.style.display = 'none';
+        }
+    }
+
+    initializePatternLocks() {
+        // Check if SimpleWorkingPatternLock is available
+        if (typeof SimpleWorkingPatternLock === 'undefined') {
+            console.warn('SimpleWorkingPatternLock not found');
+            return;
+        }
+
+        // Initialize login pattern lock
+        const loginContainer = document.getElementById('modalLoginPatternLock');
+        if (loginContainer && !window.modalLoginPatternLock) {
+            window.modalLoginPatternLock = new SimpleWorkingPatternLock('modalLoginPatternLock', {
+                title: 'Enter Pattern Lock',
+                subtitle: 'Draw your pattern to sign in',
+                minDots: 4,
+                onComplete: (pattern) => this.handlePatternLogin(pattern)
+            });
+        }
+
+        // Initialize register pattern lock
+        const registerContainer = document.getElementById('modalRegisterPatternLock');
+        if (registerContainer && !window.modalRegisterPatternLock) {
+            window.modalRegisterPatternLock = new SimpleWorkingPatternLock('modalRegisterPatternLock', {
+                title: 'Set Pattern Lock',
+                subtitle: 'Create your security pattern',
+                minDots: 4,
+                onComplete: (pattern) => this.handlePatternSet(pattern)
+            });
+        }
+    }
+
+    handlePatternSet(pattern) {
+        window.modalRegisterPattern = pattern;
+        this.showMessage('Pattern set successfully! You can now submit the registration.', 'success');
+    }
+
+    async handlePatternLogin(pattern) {
+        const username = document.getElementById('modalLoginUsername')?.value;
+        
+        if (!username) {
+            this.showMessage('Please enter your username first', 'error');
+            return;
+        }
+
+        try {
+            this.showLoading('Signing in with pattern...');
+            
+            const response = await fetch('/login-pattern', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, pattern })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showMessage(result.message, 'success');
+                setTimeout(() => window.location.href = '/dashboard', 1500);
+            } else {
+                this.showMessage(result.message, 'error');
+            }
+        } catch (error) {
+            this.showMessage('Network error. Please try again.', 'error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    async handleFormSubmission(event) {
+        const form = event.target;
+        const formData = new FormData(form);
+        const isLogin = form.closest('.auth-form').id === 'loginForm';
+        
+        // Check authentication method
+        if (window.authSystem && window.authSystem.currentAuthMethod === 'pattern' && isLogin) {
+            // Pattern login is handled by pattern lock completion
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn?.innerHTML;
+        
+        try {
+            // Show loading state
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                submitBtn.disabled = true;
+            }
+
+            // Prepare data
+            const data = this.prepareFormData(formData, isLogin);
+            
+            // Submit form
+            const endpoint = isLogin ? '/login' : '/register';
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.handleSuccess(result, isLogin, data.username);
+            } else {
+                this.showMessage(result.message, 'error');
+            }
+        } catch (error) {
+            this.showMessage('Network error. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            if (submitBtn) {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+            this.hideLoading();
+        }
+    }
+
+    prepareFormData(formData, isLogin) {
+        const data = {
+            username: formData.get('username'),
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone')
+        };
+
+        if (isLogin) {
+            data.password = formData.get('password');
+        } else {
+            if (window.authSystem && window.authSystem.currentAuthMethod === 'password') {
+                data.password = formData.get('password');
+            } else if (window.authSystem && window.authSystem.currentAuthMethod === 'pattern') {
+                data.pattern = window.modalRegisterPattern;
+                if (!data.pattern || data.pattern.length < 4) {
+                    this.showMessage('Please set up your pattern lock first!', 'error');
+                    return null;
+                }
+            }
+        }
+
+        return data;
+    }
+
+    handleSuccess(result, isLogin, username) {
+        this.showMessage(result.message, 'success');
+        
+        if (isLogin) {
+            // Store remember me preference
+            const rememberMe = document.getElementById('modalRememberMe');
+            if (rememberMe && rememberMe.checked) {
+                localStorage.setItem('rememberUsername', username);
+            }
+            
+            setTimeout(() => window.location.href = '/dashboard', 1500);
+        } else {
+            // Switch to login tab and pre-fill username
+            setTimeout(() => {
+                this.switchTab('login');
+                const loginUsername = document.getElementById('modalLoginUsername');
+                if (loginUsername) {
+                    loginUsername.value = username;
+                }
+            }, 2000);
+        }
+    }
+
+    togglePassword(input) {
+        const button = input.nextElementSibling;
+        const icon = button.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    }
+
+    showLoading(message = 'Processing...') {
+        // Create or update loading overlay
+        let loadingOverlay = document.getElementById('modalLoadingOverlay');
+        if (!loadingOverlay) {
+            loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'modalLoadingOverlay';
+            loadingOverlay.className = 'modal-loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-content">
+                    <div class="spinner">
+                        <div class="shield-spinner">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                    <h3>Secure Processing</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            document.body.appendChild(loadingOverlay);
+        } else {
+            loadingOverlay.querySelector('p').textContent = message;
+        }
+        loadingOverlay.style.display = 'flex';
+    }
+
+    hideLoading() {
+        const loadingOverlay = document.getElementById('modalLoadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    showMessage(message, type = 'info') {
+        const messageDiv = document.getElementById('modalAuthMessage');
+        if (messageDiv) {
+            messageDiv.innerHTML = `
+                <div class="message ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                    <button class="message-close" onclick="modalAuthHandler.clearMessage()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            messageDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => this.clearMessage(), 5000);
+        }
+    }
+
+    clearMessage() {
+        const messageDiv = document.getElementById('modalAuthMessage');
+        if (messageDiv) {
+            messageDiv.style.display = 'none';
+        }
+    }
+}
+
+// Initialize modal auth handler
+const modalAuthHandler = new ModalAuthHandler();
+
+// Make it globally available
+window.modalAuthHandler = modalAuthHandler;
+</script>
