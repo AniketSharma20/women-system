@@ -1,0 +1,83 @@
+/* Shelter Modal Popup - Mobile Responsive Fix */
+.shelter-popup, .leaflet-popup-content-wrapper {
+    max-width: min(90vw, 400px) !important;
+    min-width: 280px;
+    max-height: 70vh !important;
+    overflow-y: auto;
+}
+
+.shelter-popup, .leaflet-popup-content {
+    font-family: inherit;
+    padding: clamp(12px, 3vw, 20px) !important;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.5;
+}
+
+.shelter-popup h4 {
+    margin-bottom: 12px;
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.shelter-popup p {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+}
+
+.shelter-popup .popup-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.shelter-popup .btn {
+    flex: 1;
+    min-height: 48px;
+    padding: clamp(10px, 2.5vw, 12px) clamp(15px, 4vw, 20px);
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    border-radius: 8px;
+    justify-content: center;
+}
+
+.shelter-popup .btn-small {
+    min-height: 44px;
+    padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 16px);
+}
+
+@media (max-width: 480px) {
+    .leaflet-popup-content-wrapper {
+        margin: 10px !important;
+    }
+    
+    .shelter-popup .popup-actions {
+        flex-direction: column;
+    }
+}
+
+/* Global Touch Targets */
+@media (max-width: 768px), (hover: none) {
+    .btn, .nav-btn, .header-btn, .stat-action, .tip-arrow, .action-inline-btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    .nav-btn span {
+        display: block !important;
+    }
+    
+    .nav-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .nav-container::-webkit-scrollbar {
+        display: none;
+    }
+}
