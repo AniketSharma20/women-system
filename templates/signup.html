@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Sign Up - SafeGuard | Women Security System</title>
     <meta name="description" content="Create your SafeGuard account to access advanced women security features, emergency assistance, and 24/7 protection.">
-    <link rel="stylesheet" href="{{ url_for('static', filename='landing-unified.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing-professional.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='auth-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='pattern-lock-simple.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -558,13 +558,20 @@
                         const passwordInput = field.querySelector('input[type="password"]');
                         if (passwordInput && !field.querySelector('#confirmPassword')) {
                             field.style.display = 'none';
+                            passwordInput.removeAttribute('required');
                         }
                     });
+                    const confirmPass = document.getElementById('confirmPassword');
+                    if (confirmPass) confirmPass.removeAttribute('required');
                     patternSection.style.display = 'block';
                 } else {
                     passwordFields.forEach(field => {
                         field.style.display = 'block';
+                        const passwordInput = field.querySelector('input[type="password"]');
+                        if (passwordInput) passwordInput.setAttribute('required', 'required');
                     });
+                    const confirmPass = document.getElementById('confirmPassword');
+                    if (confirmPass) confirmPass.setAttribute('required', 'required');
                     patternSection.style.display = 'none';
                 }
             }
@@ -673,7 +680,11 @@
 
             validateForm() {
                 let isValid = true;
-                const requiredFields = ['signupUsername', 'signupEmail', 'signupPassword', 'confirmPassword'];
+                let requiredFields = ['signupFirstName', 'signupLastName', 'signupUsername', 'signupEmail'];
+                
+                if (this.currentAuthMethod === 'password') {
+                    requiredFields.push('signupPassword', 'confirmPassword');
+                }
 
                 requiredFields.forEach(fieldId => {
                     const field = document.getElementById(fieldId);

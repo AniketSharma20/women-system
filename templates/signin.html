@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Sign In - SafeGuard | Women Security System</title>
     <meta name="description" content="Sign in to your SafeGuard account to access your personal security dashboard and emergency features.">
-    <link rel="stylesheet" href="{{ url_for('static', filename='landing-unified.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing-professional.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='auth-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='pattern-lock-simple.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -269,14 +269,23 @@
                         const passwordInput = field.querySelector('input[type="password"]');
                         if (passwordInput && field.id !== 'signinUsernameValidation') {
                             field.style.display = 'none';
+                            passwordInput.removeAttribute('required');
                         }
                     });
                     patternSection.style.display = 'block';
+                    // Hide the submit button for pattern lock
+                    const submitBtn = document.querySelector('#signinForm button[type="submit"]');
+                    if (submitBtn) submitBtn.style.display = 'none';
                 } else {
                     passwordFields.forEach(field => {
                         field.style.display = 'block';
+                        const passwordInput = field.querySelector('input[type="password"]');
+                        if (passwordInput) passwordInput.setAttribute('required', 'required');
                     });
                     patternSection.style.display = 'none';
+                    // Show the submit button for password
+                    const submitBtn = document.querySelector('#signinForm button[type="submit"]');
+                    if (submitBtn) submitBtn.style.display = 'flex';
                 }
             }
 

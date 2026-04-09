@@ -21,26 +21,26 @@
     --danger-light: #ef4444;
     --info-color: #0ea5e9;
     
-    /* Neutral Colors */
+    /* Neural Colors (Adapted for Glassmorphism text) */
     --white: #ffffff;
-    --light-bg: #f8fafc;
-    --dark-text: #0f172a;
+    --light-bg: rgba(255, 255, 255, 0.05); /* slightly transparent */
+    --dark-text: #ffffff; /* Make default text white for dark backgrounds */
     
     /* Gray Scale */
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-300: #cbd5e1;
-    --gray-400: #94a3b8;
-    --gray-500: #64748b;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-800: #1e293b;
-    --gray-900: #0f172a;
+    --gray-50: rgba(255, 255, 255, 0.8);
+    --gray-100: rgba(255, 255, 255, 0.6);
+    --gray-200: rgba(255, 255, 255, 0.4);
+    --gray-300: rgba(255, 255, 255, 0.3);
+    --gray-400: rgba(255, 255, 255, 0.5);
+    --gray-500: rgba(255, 255, 255, 0.6);
+    --gray-600: rgba(255, 255, 255, 0.8);
+    --gray-700: #ffffff;
+    --gray-800: #ffffff;
+    --gray-900: #ffffff;
     
     /* Brand Accents */
-    --brand-gradient: linear-gradient(135deg, #1f2937 0%, #10b981 100%);
-    --brand-gradient-alt: linear-gradient(135deg, #374151 0%, #34d399 100%);
+    --brand-gradient: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+    --brand-gradient-alt: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
     
     /* UI Elements */
     --border-radius: 12px;
@@ -70,8 +70,8 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 1rem;
     line-height: 1.6;
-    color: var(--dark-text);
-    background: var(--gray-100);
+    color: var(--white);
+    background: #0f172a; /* Fallback */
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -91,7 +91,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #be185d 100%);
 }
 
 .bg-pattern {
@@ -99,8 +99,9 @@ body {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(circle at 25% 25%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 15% 50%, rgba(255, 0, 127, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 210, 255, 0.4) 0%, transparent 40%);
+    filter: blur(40px);
 }
 
 .bg-shapes {
@@ -162,9 +163,10 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--gray-200);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-brand {
@@ -193,7 +195,7 @@ body {
 .brand-name {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--white);
     line-height: 1.2;
 }
 
@@ -221,17 +223,18 @@ body {
 }
 
 .nav-link:hover {
-    background: var(--gray-100);
-    color: var(--primary-dark);
-}
-
-.nav-link-highlighted {
-    background: var(--primary-dark);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--white);
 }
 
+.nav-link-highlighted {
+    background: var(--brand-gradient-alt);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .nav-link-highlighted:hover {
-    background: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
     color: var(--white);
 }
 
@@ -249,11 +252,14 @@ body {
     max-width: 480px;
 }
 
-/* Auth Card */
+/* Auth Card Glassmorphism */
 .auth-card {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--border-radius-lg);
-    box-shadow: var(--box-shadow-xl);
+    box-shadow: var(--box-shadow-xl), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     overflow: hidden;
     animation: slideUp 0.5s ease;
 }
@@ -273,8 +279,8 @@ body {
 .auth-card-header {
     padding: 40px 40px 20px;
     text-align: center;
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
-    border-bottom: 1px solid var(--gray-100);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-logo {
@@ -312,7 +318,7 @@ body {
 .auth-logo h1 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--primary-dark);
+    color: var(--white);
     margin-bottom: 8px;
 }
 
@@ -367,19 +373,20 @@ body {
 .input-wrapper input {
     width: 100%;
     padding: 14px 50px 14px 50px;
-    border: 2px solid var(--gray-200);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: var(--transition-fast);
-    background: var(--white);
-    color: var(--dark-text);
+    background: rgba(0, 0, 0, 0.15);
+    color: var(--white);
     font-family: inherit;
 }
 
 .input-wrapper input:focus {
     outline: none;
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    border-color: rgba(255, 0, 127, 0.5);
+    background: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 4px rgba(255, 0, 127, 0.1);
 }
 
 .input-wrapper input::placeholder {
@@ -517,13 +524,13 @@ body {
 .checkmark {
     width: 20px;
     height: 20px;
-    border: 2px solid var(--gray-300);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition-fast);
-    background: var(--white);
+    background: rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
 }
 
@@ -579,10 +586,11 @@ body {
 
 .method-tabs {
     display: flex;
-    background: var(--gray-100);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: var(--border-radius);
     padding: 4px;
     gap: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .method-tab {
@@ -590,7 +598,7 @@ body {
     padding: 12px 16px;
     border: none;
     background: transparent;
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
     transition: var(--transition);
     display: flex;
@@ -603,14 +611,15 @@ body {
 }
 
 .method-tab:hover {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--secondary-color);
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
 }
 
 .method-tab.active {
-    background: var(--white);
-    color: var(--secondary-color);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    background: rgba(255, 0, 127, 0.2);
+    color: #ffffff;
+    border: 1px solid rgba(255, 0, 127, 0.5);
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
     font-weight: 600;
 }
 
@@ -629,9 +638,9 @@ body {
 .pattern-lock-section {
     margin: 20px 0;
     padding: 20px;
-    background: var(--gray-50);
+    background: rgba(0, 0, 0, 0.15);
     border-radius: var(--border-radius);
-    border: 1px solid var(--gray-200);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pattern-lock-container {
@@ -749,9 +758,9 @@ body {
 .social-btn {
     flex: 1;
     padding: 12px 20px;
-    border: 2px solid var(--gray-200);
-    background: var(--white);
-    color: var(--gray-700);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
@@ -764,9 +773,9 @@ body {
 }
 
 .social-btn:hover {
-    border-color: var(--secondary-color);
-    background: rgba(16, 185, 129, 0.05);
-    color: var(--secondary-color);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
@@ -790,8 +799,8 @@ body {
 .auth-switch {
     text-align: center;
     padding: 20px 40px 30px;
-    background: var(--gray-50);
-    border-top: 1px solid var(--gray-100);
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-switch p {
@@ -1007,10 +1016,12 @@ body {
     
     .auth-main {
         padding: 90px 15px 30px;
+        min-height: calc(100vh - 120px);
     }
     
     .auth-container {
         max-width: 100%;
+        margin-top: 20px;
     }
     
     .auth-card {
